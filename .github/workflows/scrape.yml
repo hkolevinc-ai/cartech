@@ -1,0 +1,39 @@
+name: Scrape CarTechBG catalog
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Every Sunday at 05:30 UTC / 07:30 Bulgaria winter time / 08:30 summer time
+    - cron: "30 5 * * 0"
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run scraper
+        env:
+          BASE_URL: "https://cartechbg.com/"
+          OUTPUT_FILE: "cartechbg_all_products.xlsx"
+          REQUEST_SLEEP: "0.4"
+          REQUEST_TIMEOUT: "30"
+        run: python scraper.py
+
+      - name: Upload Excel artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: cartechbg_all_products
+          path: cartechbg_all_products.xlsx
+          if-no-files-found: error
