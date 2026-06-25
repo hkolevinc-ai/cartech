@@ -27,8 +27,10 @@ jobs:
         env:
           BASE_URL: "https://cartechbg.com/"
           OUTPUT_FILE: "cartechbg_all_products.xlsx"
-          REQUEST_SLEEP: "0.4"
+          REQUEST_SLEEP: "0.35"
           REQUEST_TIMEOUT: "30"
+          MAX_IMAGES: "7"
+          MAX_CATEGORY_PAGES: "120"
         run: python scraper.py
 
       - name: Upload Excel artifact
